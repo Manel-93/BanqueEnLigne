@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
+import logoLarche from '../assets/logo-larche.png'
 import './HomePage.css'
 
-// Page d'accueil présentant la banque et l'accès à l'espace client.
+// Page d'accueil présentant la banque et l'accès à la connexion.
 function HomePage() {
   return (
     <div className="home-root">
       <section className="hero">
         <div className="hero-left">
+          <img src={logoLarche} alt="Logo l’Arche" className="hero-logo" />
           <h1>
             Bienvenue à <span>l’Arche</span>
           </h1>
@@ -14,11 +16,11 @@ function HomePage() {
             Une banque 100% en ligne, pensée pour la transparence, la sécurité et la simplicité au quotidien.
           </p>
           <div className="hero-actions">
-            <Link to="/client" className="btn-primary">
-              Accéder à l’espace client
+            <Link to="/signup" className="btn-primary">
+              Créer un compte
             </Link>
-            <Link to="/admin" className="btn-secondary">
-              Tableau de bord admin
+            <Link to="/login" className="btn-secondary">
+              Connexion
             </Link>
           </div>
           <div className="hero-badges">
@@ -28,11 +30,6 @@ function HomePage() {
           </div>
         </div>
         <div className="hero-right">
-          <div className="hero-card hero-balance">
-            <span className="card-label">Solde global</span>
-            <span className="card-value">+ 9 489,95 €</span>
-            <span className="card-caption positive">Situation saine</span>
-          </div>
           <div className="hero-card hero-security">
             <span className="card-label">Sécurité</span>
             <span className="card-value">3D Secure • Biométrie</span>

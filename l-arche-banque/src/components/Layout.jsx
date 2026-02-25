@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import './Layout.css'
 
 // Layout principal avec header, navigation et conteneur de page.
 function Layout({ children }) {
+  const location = useLocation()
+  const isSessionView =
+    location.pathname.startsWith('/client') || location.pathname.startsWith('/admin')
+
   return (
     <div className="layout-root">
       <header className="layout-header">
@@ -18,12 +22,15 @@ function Layout({ children }) {
           <NavLink to="/" end className="nav-link">
             Accueil
           </NavLink>
-          <NavLink to="/client" className="nav-link">
-            Espace client
-          </NavLink>
-          <NavLink to="/admin" className="nav-link">
-            Espace admin
-          </NavLink>
+          {isSessionView ? (
+            <Link to="/" className="nav-link nav-link-primary">
+              Déconnexion
+            </Link>
+          ) : (
+            <NavLink to="/login" className="nav-link nav-link-primary">
+              Connexion
+            </NavLink>
+          )}
         </nav>
       </header>
 

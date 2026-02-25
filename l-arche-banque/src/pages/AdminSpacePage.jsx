@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { accounts, clients, invoices, messages } from '../data/mockData'
 import './AdminSpacePage.css'
 
@@ -27,24 +28,22 @@ function AdminSpacePage() {
     <div className="admin-root">
       <header className="admin-header">
         <div>
-          <h1>Console administrateur</h1>
-          <p className="admin-subtitle">
-            Surveillez la situation financière globale des clients et leurs interactions avec la
-            banque.
-          </p>
+          <h1>Dashboard administrateur</h1>
         </div>
-        <div className="admin-kpis">
-          <div className="kpi">
-            <span className="kpi-label">Clients</span>
-            <span className="kpi-value">{clients.length}</span>
-          </div>
-          <div className="kpi">
-            <span className="kpi-label">Soldes cumulés</span>
-            <span className="kpi-value">
-              {enrichedClients
-                .reduce((acc, c) => acc + c.totalBalance, 0)
-                .toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
-            </span>
+        <div className="admin-header-right">
+          <div className="admin-kpis">
+            <div className="kpi">
+              <span className="kpi-label">Clients</span>
+              <span className="kpi-value">{clients.length}</span>
+            </div>
+            <div className="kpi">
+              <span className="kpi-label">Soldes cumulés</span>
+              <span className="kpi-value">
+                {enrichedClients
+                  .reduce((acc, c) => acc + c.totalBalance, 0)
+                  .toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+              </span>
+            </div>
           </div>
         </div>
       </header>
@@ -149,22 +148,33 @@ function AdminSpacePage() {
               <span className="panel-subtitle">Derniers échanges</span>
             </div>
             <div className="messages-thread">
-              {messages.map((m) => {
+              {messages.map((m, index) => {
                 const client = clients.find((c) => c.id === m.clientId)
+                const previous = index > 0 ? messages[index - 1] : null
+                const newThread = !previous || previous.clientId !== m.clientId
+
                 return (
-                  <div
-                    key={m.id}
-                    className={`message-bubble ${m.from === 'client' ? 'client' : 'bank'}`}
-                  >
-                    <div className="message-meta">
-                      <span>
-                        {m.from === 'client'
-                          ? `${client?.firstName} ${client?.lastName}`
-                          : 'Conseiller l’Arche'}
-                      </span>
-                      <span>{m.date}</span>
+                  <div key={m.id}>
+                    {newThread && (
+                      <div className="thread-separator">
+                        <span className="thread-title">
+                          Conversation avec {client?.firstName} {client?.lastName}
+                        </span>
+                      </div>
+                    )}
+                    <div
+                      className={`message-bubble ${m.from === 'client' ? 'client' : 'bank'}`}
+                    >
+                      <div className="message-meta">
+                        <span>
+                          {m.from === 'client'
+                            ? `${client?.firstName} ${client?.lastName}`
+                            : 'Conseiller l’Arche'}
+                        </span>
+                        <span>{m.date}</span>
+                      </div>
+                      <p>{m.content}</p>
                     </div>
-                    <p>{m.content}</p>
                   </div>
                 )
               })}

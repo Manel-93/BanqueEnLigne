@@ -1,25 +1,35 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import logoArche from '../assets/logo-arche.png'
 import { accounts, cards, invoices, messages, clients, transactions } from '../data/mockData'
 import './ClientSpacePage.css'
 
-// Sélectionne un client fictif par défaut pour la simulation.
-const DEFAULT_CLIENT_ID = 'c1'
+// Client par défaut (Alice) si aucun identifiant spécifique n'est fourni.
+const FALLBACK_CLIENT_ID = 'c1'
 
 function ClientSpacePage() {
   const [selectedAccountId, setSelectedAccountId] = useState(null)
   const [localCards, setLocalCards] = useState([])
+  const [searchParams] = useSearchParams()
 
-  const client = useMemo(() => clients.find((c) => c.id === DEFAULT_CLIENT_ID), [])
+  const clientIdFromUrl = searchParams.get('clientId') ?? FALLBACK_CLIENT_ID
+
+  const clientId = useMemo(
+    () => (clients.some((c) => c.id === clientIdFromUrl) ? clientIdFromUrl : FALLBACK_CLIENT_ID),
+    [clientIdFromUrl],
+  )
+
+  const client = useMemo(() => clients.find((c) => c.id === clientId), [clientId])
 
   useEffect(() => {
-    setLocalCards(cards.filter((c) => c.clientId === DEFAULT_CLIENT_ID))
-    const firstAccount = accounts.find((a) => a.clientId === DEFAULT_CLIENT_ID)
+    setLocalCards(cards.filter((c) => c.clientId === clientId))
+    const firstAccount = accounts.find((a) => a.clientId === clientId)
     setSelectedAccountId(firstAccount?.id ?? null)
-  }, [])
+  }, [clientId])
 
   const clientAccounts = useMemo(
-    () => accounts.filter((a) => a.clientId === DEFAULT_CLIENT_ID),
-    [],
+    () => accounts.filter((a) => a.clientId === clientId),
+    [clientId],
   )
 
   const currentAccount = useMemo(
@@ -33,13 +43,13 @@ function ClientSpacePage() {
   )
 
   const clientInvoices = useMemo(
-    () => invoices.filter((i) => i.clientId === DEFAULT_CLIENT_ID),
-    [],
+    () => invoices.filter((i) => i.clientId === clientId),
+    [clientId],
   )
 
   const clientMessages = useMemo(
-    () => messages.filter((m) => m.clientId === DEFAULT_CLIENT_ID),
-    [],
+    () => messages.filter((m) => m.clientId === clientId),
+    [clientId],
   )
 
   const isOverdrawn = currentAccount && currentAccount.balance < 0
@@ -54,22 +64,33 @@ function ClientSpacePage() {
 
   return (
     <div className="client-root">
-      <section className="client-header">
-        <div>
-          <h1>Espace client</h1>
-          <p className="client-welcome">
-            Bonjour <span>{client?.firstName}</span>, voici une vue synthétique de vos comptes chez
-            l’Arche.
-          </p>
-        </div>
-        <div className={`status-pill ${isOverdrawn ? 'negative' : 'positive'}`}>
-          <span className="dot" />
-          {isOverdrawn ? 'À découvert' : 'Pas à découvert'}
-        </div>
-      </section>
+      <div className="client-shell">
+        <aside className="client-sidebar">
+          <div className="sidebar-logo">
+            <img src={logoArche} alt="Logo l’Arche" />
+            <span>Banque en ligne</span>
+          </div>
+        </aside>
 
-      <section className="client-grid">
-        <div className="panel accounts-panel">
+        <div className="client-main">
+          <section className="client-header">
+            <div>
+              <h1>Espace client</h1>
+              <p className="client-welcome">
+                Bonjour <span>{client?.firstName}</span>, voici une vue synthétique de vos comptes
+                chez l’Arche.
+              </p>
+            </div>
+            <div className="client-header-actions">
+              <div className={`status-pill ${isOverdrawn ? 'negative' : 'positive'}`}>
+                <span className="dot" />
+                {isOverdrawn ? 'À découvert' : 'Pas à découvert'}
+              </div>
+            </div>
+          </section>
+
+          <section className="client-grid">
+            <div className="panel accounts-panel">
           <div className="panel-header">
             <h2>Comptes bancaires</h2>
             <span className="panel-subtitle">Compte courant & épargne</span>
@@ -201,15 +222,20 @@ function ClientSpacePage() {
               ))}
             </ul>
           </div>
+        </div>
+          </section>
 
-          <div className="panel messages-panel">
+          <section className="panel client-messages-section">
             <div className="panel-header">
               <h2>Messagerie sécurisée</h2>
               <span className="panel-subtitle">Client ↔ Banque</span>
             </div>
             <div className="messages-thread">
               {clientMessages.map((m) => (
-                <div key={m.id} className={`message-bubble ${m.from === 'client' ? 'client' : 'bank'}`}>
+                <div
+                  key={m.id}
+                  className={`message-bubble ${m.from === 'client' ? 'client' : 'bank'}`}
+                >
                   <div className="message-meta">
                     <span>{m.from === 'client' ? client?.firstName : 'Conseiller l’Arche'}</span>
                     <span>{m.date}</span>
@@ -218,9 +244,9 @@ function ClientSpacePage() {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

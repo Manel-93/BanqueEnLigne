@@ -1,0 +1,86 @@
+.create-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-panel {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.8rem 1.7rem 1.9rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
+}
+
+.create-panel h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.create-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 1.2rem;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.create-label {
+  font-size: 0.85rem;
+}
+
+.create-input {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 0.55rem 0.7rem;
+  background: #f9fafb;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.create-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4);
+}
+
+.create-button {
+  margin-top: 0.7rem;
+  border-radius: 999px;
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: none;
+  cursor: pointer;
+  background: #3b82f6;
+  color: #f9fafb;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.create-button:hover {
+  background-color: #2563eb;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.create-success {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #15803d;
+  background: #dcfce7;
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #86efac;
+}
+
